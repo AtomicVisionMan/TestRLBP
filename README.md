@@ -20,10 +20,21 @@ The other major requirements have been:
 I've got the assignment rather late due to some agency issues. Have to manage it over weekend somehow steal some time here and there.
 
 The tasks for first day then:
-1) Register a new test account on github and create test project for RLBP - done!
-2) Create a shell application locally to load and save images - done!
-3) Commit to github repo - done!
-4) Compile OpenCV 3 on MBP (OSX 10.9.5, Xcode 6.1) - to do...
 
-NOTE: it's 
+1) Register a new test account on github and create test project for RLBP - done!
+
+2) Create a shell application locally to load and save images - done!
+
+3) 
+
+4) Commit to github repo - done!
+
+5) Read the paper - to do...
+
+6) Compile OpenCV 3 on MBP (OSX 10.9.5, Xcode 6.1) - to do...
+
+```
+NOTE: Regarding the last point, OpenCV version 3 is not necessary. 
+```
+
 
