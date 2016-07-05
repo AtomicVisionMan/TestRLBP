@@ -43,25 +43,25 @@ No coding done. Just read paper and some online articles regarding LBP.
 ### Day 3 (July 4)
 First a quick recap of what learnt over weekend.
 
-1. loads resources available online as expected. I read the following into different extent of details. It's a simple technique anyway.
+1). loads resources available online as expected. I read the following into different extent of details. It's a simple technique anyway.
 
 >- [Local Binary Pattern for texture classification](http://scikit-image.org/docs/dev/auto_examples/plot_local_binary_pattern.html)
 >- [Local Binary Pattern](http://pi-virtualworld.blogspot.co.uk/2014/01/local-binary-pattern.html)
 >- [Texture Matching using Local Binary Patterns (LBP), OpenCV, scikit-learn and Python](http://hanzratech.in/2015/05/30/local-binary-patterns.html)
 >- [Local Binary Patterns with Python & OpenCV](http://www.pyimagesearch.com/2015/12/07/local-binary-patterns-with-python-opencv/)
 
-2. Original LBP
+2). Original LBP
 >- Local binary pattern binarizes the local neighborhood of each pixel and builds a histogram on these binary neighborhood patterns.
 >- It is claimed to be illumination and translation invariant [Texture Matching using Local Binary Patterns (LBP), OpenCV, scikit-learn and Python](http://hanzratech.in/2015/05/30/local-binary-patterns.html)
 >- Refer to Eq. (1) in the RLBP paper
 >- many, many extensions, as listed in the paper or [wiki](https://en.wikipedia.org/wiki/Local_binary_patterns#cite_note-5)
 
-3. RLBP
+3). RLBP
 > - It seems that this particular extension is to improve on one of the key concept - **_ uniform pattern _**
 > - Basically, the authors assume that two particular substrings are very likely caused by noise, therefore simply modify them to smoother version of substring. Namely, from (010)-->(000), and (101)-->(111)
 > - This apparently will effect uniform mapping process where this paper claims the contribution
 
-4. Codes
+4). Codes
 
 NOW the favourite part... Since the total time I can spend on this is really limited, I've decided to go with some existing implementations, shouldn't be too difficult to find!
 
@@ -79,11 +79,9 @@ In fact, I quite like it because:
 > - **Most importantly,** it has the `real` low level LBP implementation rather than a single function call to `local_binary_pattern` as have been done in some of the threads above
 > - It has GPU version!! if I've got time...
 
-5. Compilation & Run
+5). Compilation & Run
 > - Got OpenCV installed through MacPorts so LBP class is easy enough to build. 
 > - Spent little bit more time on finding the right FFTW3 library for Mac. Eventually job done through MacPorts again.
-
-Day 4 (July 5)
 
 
 
