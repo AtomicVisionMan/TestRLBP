@@ -25,7 +25,7 @@ The tasks for first day then:
 
 2) Create a shell application locally with basic functionalities like load and save images etc. - done!
 
-3) Set up CMake environment for the project (i.e. CMakeLists.txt including 12 lines of codes with 3 new lines) - done!
+3) Set up CMake environment for the project (i.e. simplest CMakeLists.txt with total 12 lines including 3 empty lines) - done!
 
 4) Commit to github repo - done!
 
@@ -38,7 +38,7 @@ NOTE: Regarding the last point, OpenCV version 3 is not necessary. Just since v3
 ```
 
 ### Day 2 (July 3)
-No coding done. Just read paper and some online articles re. LBP.
+No coding done. Just read paper and some online articles regarding LBP.
 
 ### Day 3 (July 4)
 First a quick recap of what learnt over weekend.
@@ -65,12 +65,27 @@ First a quick recap of what learnt over weekend.
 
 NOW the favourite part... Since the total time I can spend on this is really limited, I've decided to go with some existing implementations, shouldn't be too difficult to find!
 
-The first google result returned by "Local Binary Patterns c++" seems reasonable. In fact, I quite like it because:
+The first google result returned by "Local Binary Patterns c++" seems reasonable:[C++ implementation of the Local Binary Pattern texture descriptors](https://github.com/nourani/LBP). As the author has noted: 
+```
+ *  The methods implemented here are inspired by the Matlab code available
+ *  from web site of the University of Oulu:
+ *  	http://www.cse.oulu.fi/CMV/Downloads/LBPMatlab
+```
+
+which are literally a line-by-line translation from the original Matlab implementation to C++ codes.
+
+In fact, I quite like it because:
 > - at first glance, appears to be well structured C++ code
-> - **Most importantly,** it has the `real` low level LBP implementation rather than a single function call to `local_binary_pattern` in some of the threads above
+> - **Most importantly,** it has the `real` low level LBP implementation rather than a single function call to `local_binary_pattern` as have been done in some of the threads above
 > - It has GPU version!! if I've got time...
 
-5. 
+5. Compilation & Run
+> - Got OpenCV installed through MacPorts so LBP class is easy enough to build. 
+> - Spent little bit more time on finding the right FFTW3 library for Mac. Eventually job done through MacPorts again.
+
+Day 4 (July 5)
+
+
 
 
 
