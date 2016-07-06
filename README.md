@@ -59,7 +59,7 @@ First a quick recap of what learnt over weekend.
 3). RLBP
 > - It seems that this particular extension is to improve on one of the key concept - **_ uniform pattern _**
 > - Basically, the authors assume that two particular substrings are very likely caused by noise, therefore simply modify them to smoother version of substring. Namely, from (010)-->(000), and (101)-->(111)
-> - This apparently will effect uniform mapping process where this paper claims the contribution
+> - This apparently will effect uniform mapping process where this paper claims the primary contribution
 
 4). Codes
 
@@ -83,7 +83,16 @@ In fact, I quite like it because:
 > - Got OpenCV installed through MacPorts so LBP class is easy enough to build. 
 > - Spent little bit more time on finding the right FFTW3 library for Mac. Eventually job done through MacPorts again.
 
+Day 4 (July 5)
+This day just play with codes and examples and parameters of the above listed C++ and python code example.
 
+Now I know the meaning of 'uniform patterns' and mapping table etc.
+> - A local binary pattern is called uniform if the binary pattern contains at most two 0-1 or 1-0 transitions [wiki](https://en.wikipedia.org/wiki/Local_binary_patterns)
+> - In original Matlab implementation (hence C++ version too), this is done by a nice little trick as `the number of 1-bits in XOR(x,Rotate left(x))`
+> - Now for the RLBP extension, once a non-uniform pattern is found, then search for all of its neighboring three-bit of (010) and (101) - done!!
+
+Day 5 (July 6)
+Implemented the above solution and update the git repo.
 
 
 
