@@ -69,11 +69,12 @@ namespace lbp {
 		LBP_MAPPING_U2,
 		LBP_MAPPING_RI,
 		LBP_MAPPING_RIU2,
-		LBP_MAPPING_HF
+		LBP_MAPPING_HF,
+		LBP_MAPPING_U2ROB
 	};
     
 	static const string MappingTypeStr[] = {
-				"none", "u2", "ri", "riu2", "hf" };
+				"none", "u2", "ri", "riu2", "hf", "u2rob" };
     
 	class LBP {
         
@@ -81,6 +82,8 @@ namespace lbp {
 		LBP();
 		LBP( unsigned int samples, MappingType type );
 		~LBP( void );
+		
+		int *get_bits(int n, int bitswanted);
         
 		/**
 		 * Mapping methods
@@ -101,6 +104,8 @@ namespace lbp {
                 return LBP_MAPPING_RIU2;
             else if( s.compare("hf")  == 0 )
                 return LBP_MAPPING_HF;
+			else if ( s.compare("u2rob") == 0 )
+				return LBP_MAPPING_U2ROB;
             else
                 return LBP_MAPPING_NONE;
         }

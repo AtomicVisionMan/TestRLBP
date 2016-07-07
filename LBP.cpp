@@ -54,6 +54,20 @@ LBP::~LBP() {
 	}
 }
 
+int* LBP::get_bits(int n, int bitswanted){
+	int *bits = (int*)malloc(sizeof(int) * bitswanted);
+	
+	int k;
+	for(k=0; k<bitswanted; k++){
+		int mask =  1 << k;
+		int masked_n = n & mask;
+		int thebit = masked_n >> k;
+		bits[k] = thebit;
+	}
+	
+	return bits;
+}
+
 /** ******************************************************************
  *
  * Mapping part
@@ -77,6 +91,65 @@ LBP & LBP::generateMapping( unsigned int samples, MappingType type ) {
 		newMax = (int) pow( 2., (int) samples );
 		for( unsigned int i = 0; i < newMax; i++ ) {
 			table.push_back(i);
+		}
+	}
+	else if ( type == LBP_MAPPING_U2ROB ){
+		// Robust Uniform 2
+		newMax = samples * (samples - 1) + 3;
+		
+		for (unsigned int i = 0; i < pow(2., (int) (samples) ); i++) {
+			unsigned int j = rotateLeft(i, samples);
+			int numt = NumberOfSetBits(i ^ j);
+			
+			if (numt <= 2) {
+				table.push_back(index);
+				index = index + 1;
+			}
+			else{
+				// only consider the non-uniform patterns
+				int* bts = get_bits(i, samples);
+				
+				vector<int> bts_cp(samples);
+				std::copy(bts, bts + samples, bts_cp.begin());
+				bool found  = false;
+				int count = 0;
+				
+				// case 1: (010)-->(000)
+				for (int p = 0; p <= (samples - 3); ++p) {
+					int b1 = bts[p];
+					int b2 = bts[p+1];
+					int b3 = bts[p+2];
+					
+					if ( b1 == 0 && b2 == 1 && b3 == 0)
+					{
+						bts_cp[p+1] = 0;
+						found  = true;
+						count += 1;
+					}
+				}
+				// case 2: (101)-->(111)
+				for (int p = 0; p <= samples - 3; ++p) {
+					int b1 = bts[p];
+					int b2 = bts[p+1];
+					int b3 = bts[p+2];
+					
+					if ( b1 == 1 && b2 == 0 && b3 == 1)
+					{
+						bts_cp[p+1] = 1;
+						found = true;
+						count += 1;
+					}
+				}
+				
+				if (found) {
+					table.push_back(index);
+					index = index + 1;
+				}else{
+					table.push_back( newMax - 1 );
+				}
+				free(bts);
+			}
+			
 		}
 	}
 	else if( type == LBP_MAPPING_U2 ) {
@@ -234,8 +307,6 @@ bool LBP::loadMapping( string fileName ) {
         cerr << "File \'" << fileName << "\' could not be opened" << endl;
         return false;
     }
-    
-    
     
     string s; int i;
     // Get file type
