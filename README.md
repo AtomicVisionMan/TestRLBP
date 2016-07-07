@@ -95,6 +95,6 @@ Now I know the meaning of 'uniform patterns' and mapping table etc.
 Implemented the above solution and update the git repo.
 
 ### Day 6 (July 7)
-Updated and uploaded to git repo - really should have done yesterday but got carried away by integration work. It's the very end of the project...
+Updated and uploaded to git repo - really should have done yesterday but got carried away by integration work. It's the very end of the project... This has taken toooo long for a simple task!
 
 
