@@ -83,7 +83,7 @@ In fact, I quite like it because:
 > - Got OpenCV installed through MacPorts so LBP class is easy enough to build. 
 > - Spent little bit more time on finding the right FFTW3 library for Mac. Eventually job done through MacPorts again.
 
-Day 4 (July 5)
+### Day 4 (July 5)
 This day just play with codes and examples and parameters of the above listed C++ and python code example.
 
 Now I know the meaning of 'uniform patterns' and mapping table etc.
@@ -91,7 +91,7 @@ Now I know the meaning of 'uniform patterns' and mapping table etc.
 > - In original Matlab implementation (hence C++ version too), this is done by a nice little trick as `the number of 1-bits in XOR(x,Rotate left(x))`
 > - Now for the RLBP extension, once a non-uniform pattern is found, then search for all of its neighboring three-bit of (010) and (101) - done!!
 
-Day 5 (July 6)
+### Day 5 (July 6)
 Implemented the above solution and update the git repo.
 
 
