@@ -99,4 +99,7 @@ Updated and uploaded to git repo - really should have done yesterday but got car
 
 Still there are some modifications/improvmennts to be done but this really has taken toooo long for a simple task!
 
+### July 12
+Spent some more time on this again, to finish it properly. It's a little more than I thought...
 
+The gist of it lies in the mapping function, now I think I've got a right version to update soon
