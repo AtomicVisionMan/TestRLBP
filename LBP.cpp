@@ -68,6 +68,22 @@ int* LBP::get_bits(int n, int bitswanted){
 	return bits;
 }
 
+unsigned int LBP::fromBin(vector<int> &bin, int len)
+{
+	// double check the binary string is of valid length
+	if (bin.size() != len ) {
+		cout << "ERROR: The binary string length does not match." << endl;
+		exit(1);
+	}
+	
+	unsigned int dec = 0;
+	for (int i = 0; i < len; ++i) {
+		dec += bin.at(i) * pow(2., i);
+	}
+	
+	return dec;
+}
+
 /** ******************************************************************
  *
  * Mapping part
@@ -80,6 +96,10 @@ LBP & LBP::generateMapping() {
 LBP & LBP::generateMapping( unsigned int samples, MappingType type ) {
 	this->orbits.clear();
 	this->table.clear();
+	this->rtable.clear();
+	this->rbin.clear();
+	this->uninum.clear();
+	
 	this->num = 0;
 	this->type = type;
 	this->samples = samples;
@@ -111,8 +131,10 @@ LBP & LBP::generateMapping( unsigned int samples, MappingType type ) {
 				
 				vector<int> bts_cp(samples);
 				std::copy(bts, bts + samples, bts_cp.begin());
-				bool found  = false;
-				int count = 0;
+				bool found1 = false;
+				unsigned int binVal1 = -1;
+				int unicnt = 0;	// number of uniform patterns converted from bts
+				list<int> rmap; // robust mapping for non-uniform pattern
 				
 				// case 1: (010)-->(000)
 				for (int p = 0; p <= (samples - 3); ++p) {
@@ -120,33 +142,92 @@ LBP & LBP::generateMapping( unsigned int samples, MappingType type ) {
 					int b2 = bts[p+1];
 					int b3 = bts[p+2];
 					
+					if (i == 42) {
+						printf("%d-%d-%d\n", b1, b2, b3);
+					}
 					if ( b1 == 0 && b2 == 1 && b3 == 0)
 					{
 						bts_cp[p+1] = 0;
-						found  = true;
-						count += 1;
+						found1  = true;
 					}
 				}
+				
+				// find out what's the new histogram value
+				if (found1) {
+					binVal1 = fromBin(bts_cp, samples);
+					rmap.push_back(binVal1);
+	
+					// now check if the new value is uniform pattern or not
+					unsigned int n = rotateLeft(binVal1, samples);
+					int nt = NumberOfSetBits(binVal1 ^ n);
+				
+					if(nt <= 2){
+						unicnt++;
+					}
+				}
+				
 				// case 2: (101)-->(111)
+				// reset for the second case
+				std::copy(bts, bts + samples, bts_cp.begin());
+				bool found2 = false;
+				unsigned int binVal2 = -1;
+				
 				for (int p = 0; p <= samples - 3; ++p) {
 					int b1 = bts[p];
 					int b2 = bts[p+1];
 					int b3 = bts[p+2];
 					
+					if (i == 42) {
+						printf("%d-%d-%d\n", b1, b2, b3);
+					}
 					if ( b1 == 1 && b2 == 0 && b3 == 1)
 					{
 						bts_cp[p+1] = 1;
-						found = true;
-						count += 1;
+						found2 = true;
+						
+						if (i == 13) {
+							for (int z = 0; z < bts_cp.size(); ++z) {
+								cout << bts_cp[z];
+							}
+							cout << endl;
+						}
+						
+					}
+				}
+
+				// find out what's the new histogram value
+				if (found2) {
+					binVal2 = fromBin(bts_cp, samples);
+					rmap.push_back(binVal2);
+					
+					// now check if the new value is uniform pattern or not
+					unsigned int n = rotateLeft(binVal2, samples);
+					int nt = NumberOfSetBits(binVal2 ^ n);
+					
+					if(nt <= 2){
+						unicnt++;
 					}
 				}
 				
-				if (found) {
+				// this non-uniform string can map to one/some uniform pattern(s) and non-uniform pattern(s)
+				if (found1 || found2) {
+					if (i >= 240 || i == 42) {
+						printf("%d -->%d or %d with %d, %d \n", i, binVal1, binVal2, index, unicnt);
+					}
+
+					// after mapping, we only interested in the new bin index
+					rbin.push_back(index);
+					uninum.push_back(unicnt);
+					rtable.push_back(rmap);
+					
+					// we still want to count for this bin,
+					// so that afterwards to disperse the occurance to other converting patters
 					table.push_back(index);
 					index = index + 1;
-				}else{
-					table.push_back( newMax - 1 );
-				}
+				}else
+					// no 'robust pattern' found, stick to original plan
+					table.push_back( 255 );
+				
 				free(bts);
 			}
 			
@@ -260,8 +341,10 @@ LBP & LBP::generateMapping( unsigned int samples, MappingType type ) {
 		cerr << "Unknown mapping!" << endl;
 		exit(1);
 	}
-    
-	this->num = newMax;
+	if (type == LBP_MAPPING_U2ROB) {
+		this->num = 256;
+	}else
+		this->num = newMax;
 
 	return *this;
 }
@@ -493,7 +576,7 @@ LBP & LBP::calcLBP( Mat d_img, double radius, bool borderCopy ) {
 	// Apply mapping if it is defined
 	if( type != LBP_MAPPING_NONE ) {
 		MatIterator_<unsigned char> it = result.begin<unsigned char>(), it_end = result.end<
-        unsigned char>();
+		unsigned char>();
 		for( ; it != it_end; ++it ) {
 			*it = table[(*it)];
 		}
@@ -551,10 +634,55 @@ LBP & LBP::calcHist( Mat * lbpImg, Mat * mask ) {
                      false // do not accumulate
                      );
 	}
+	
+	// now we need sort out for RLBP case
+	// by re-allocate bin element for robust patterns
+	if (type == LBP_MAPPING_U2ROB ) {
+		for (int i = 0; i < rbin.size(); ++i) {
+			
+			int bin = rbin.at(i);
+			int unicnt = uninum.at(i);
+			list<int> rmap = rtable.at(i);
+			
+			float binVal = hist.at<float>(bin);
+			printf("%d	: %d - %.2f, rpattern: %d, unicnt:%d \n", i, bin, binVal, rmap.size(), unicnt);
+			
+			// if none of converted pattern is uniform, then accumulate it to non-uniform patterns
+			if (unicnt == 0 ) {
+//				cout << "still non-uni: " << i << ", binVal: " << binVal << endl;
+				hist.at<float>(255) += binVal;
+				
+				hist.at<float>(bin) = 0;
+			}
+			
+			// if all converted patterns are uniform, that's easy too
+			if (unicnt == rmap.size()) {
+				float newVal = binVal / unicnt;
+				list<int>::iterator it;
+				for ( it = rmap.begin(); it != rmap.end(); ++it) {
+					hist.at<float>( *it ) += newVal;
+				}
+				
+				hist.at<float>(bin) = 0;
+			}
+			
+			if (unicnt > 0 && rmap.size() > unicnt) {
+				cout << "partially non-uni: " << i << ", binVal: " << binVal << endl;
+				float newVal = binVal / rmap.size();
+				hist.at<float>(255) += newVal;
+				hist.at<float>(rmap.front()) += newVal;
+				
+				hist.at<float>(bin) = 0;
+			}
+		}
+		
+		printf("%d - %d - %d\n", rbin.size(), rtable.size(), uninum.size());
+	}
 	return *this;
 }
 
 vector<double> LBP::getHist( bool norm ) {
+	cout << "	*** bin number:" << num << ", hist size: " << hist.rows << endl;
 	vector<double> h( hist.rows );
 	Scalar sum( 1 );
     

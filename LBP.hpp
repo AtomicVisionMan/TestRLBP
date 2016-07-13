@@ -30,6 +30,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <list>
 #include <climits>
 #include <cmath>
 #include <complex>
@@ -148,6 +149,10 @@ namespace lbp {
         // Mapping variables
         MappingType type;
         vector<int> table;
+		vector< list<int> > rtable; // list of patterns which valid non-uniform string can convert to
+		vector<int> rbin;	// robust bin index
+		vector<int> uninum; // number of converted uniform patterns
+		
         unsigned int samples;
         unsigned int num;
         // Fourier Histogram variables
@@ -163,7 +168,9 @@ namespace lbp {
         // Descriptor variables
         Mat lbpImage;
         MatND hist;
-        
+		
+		unsigned int fromBin(vector<int>& bin, int len);	// binary --> decimal 
+		
         // Private bit operation methods
         int NumberOfSetBits( int i ) {
             i = i - ((i >> 1) & 0x55555555);

@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
 	int rad = 1;
 	int pts = 8;
-	string mapping = "u2";
+	string mapping = "u2rob";
 	string mapFileName = "map_" + mapping + ".txt";
 	bool normalizeHist = false;
 	
