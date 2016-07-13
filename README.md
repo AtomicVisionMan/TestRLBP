@@ -103,3 +103,11 @@ Still there are some modifications/improvmennts to be done but this really has t
 Spent some more time on this again, to finish it properly. It's a little more than I thought...
 
 The gist of it lies in the mapping function, now I think I've got a right version to update soon
+
+### July 13
+This is it!! I believe this is the correct version of doing things described in that paper now.
+>- Turned out the correct mapping conversion cannot be done inside the 'mapping' funciton
+>- It can only be done after the histogram is computed, as a non-uniform pattern can map to `one/some uniform pattern(s) and non-uniform pattern(s)`. 
+>- Inside the mapping function one can only record these robust patterns and new patterns they can convert to.
+
+
